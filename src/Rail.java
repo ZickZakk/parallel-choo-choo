@@ -12,15 +12,12 @@ public class Rail
 
     public List<Rail> connectedRails;
 
-    public boolean isOccupied;
-
     public Lock ChooChooLock;
 
     public Rail(int id)
     {
         Id = id;
         connectedRails = new ArrayList<>();
-        isOccupied = false;
 
         ChooChooLock = new ReentrantLock();
     }

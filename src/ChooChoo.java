@@ -17,7 +17,6 @@ public class ChooChoo
         startingRail.ChooChooLock.lock();
         CurrentRail = startingRail;
 
-        Overall:
         while (CurrentRail.Id != TargetRailId)
         {
             if (CurrentRail.Id > TargetRailId)
@@ -25,28 +24,22 @@ public class ChooChoo
                 // Choo-Choo will abwärts.
                 if (move((newRailId, currentRailId) -> newRailId < currentRailId, " Choo-Choo is arrived at "))
                 {
-                    continue Overall;
+                    continue;
                 }
 
                 // Choo-Choo kann nicht abwärts, versucht aufwärts.
-                if (move((newRailId, currentRailId) -> newRailId > currentRailId, " Choo-Choo went back to "))
-                {
-                    continue Overall;
-                }
+                move((newRailId, currentRailId) -> newRailId > currentRailId, " Choo-Choo went back to ");
             }
             else
             {
                 // Choo-Choo will aufwärts.
                 if (move((newRailId, currentRailId) -> newRailId > currentRailId, " Choo-Choo is arrived at "))
                 {
-                    continue Overall;
+                    continue;
                 }
 
                 // Choo-Choo kann nicht aufwärts, versucht abwärts.
-                if (move((newRailId, currentRailId) -> newRailId < currentRailId, " Choo-Choo went back to "))
-                {
-                    continue Overall;
-                }
+                move((newRailId, currentRailId) -> newRailId < currentRailId, " Choo-Choo went back to ");
             }
         }
 
@@ -69,9 +62,11 @@ public class ChooChoo
                 CurrentRail = rail;
 
                 System.out.println(this.toString() + stringToPrint + CurrentRail.Id);
+
                 return true;
             }
         }
+
         return false;
     }
 
