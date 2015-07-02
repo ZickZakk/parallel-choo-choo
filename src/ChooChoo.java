@@ -1,3 +1,5 @@
+import java.util.function.Predicate;
+
 /**
  * Created by Georg on 23.06.2015.
  */
@@ -22,24 +24,41 @@ public class ChooChoo
             if (CurrentRail.Id > TargetRailId)
             {
                 // Choo-Choo will abwärts.
-                if (move((newRailId, currentRailId) -> newRailId < currentRailId, " Choo-Choo is arrived at "))
+                if (move((newRail) -> newRail.Id < CurrentRail.Id, " Choo-Choo is arrived at "))
                 {
                     continue;
                 }
 
                 // Choo-Choo kann nicht abwärts, versucht aufwärts.
-                move((newRailId, currentRailId) -> newRailId > currentRailId, " Choo-Choo went back to ");
+                move((newRail) -> newRail.Id > CurrentRail.Id, " Choo-Choo went back to ");
+                try
+                {
+                    // Choo-Choo wartet kurz, weil es Platz gemacht hat.
+                    Thread.sleep(5);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
             else
             {
                 // Choo-Choo will aufwärts.
-                if (move((newRailId, currentRailId) -> newRailId > currentRailId, " Choo-Choo is arrived at "))
+                if (move((newRail) -> newRail.Id > CurrentRail.Id, " Choo-Choo is arrived at "))
                 {
                     continue;
                 }
 
                 // Choo-Choo kann nicht aufwärts, versucht abwärts.
-                move((newRailId, currentRailId) -> newRailId < currentRailId, " Choo-Choo went back to ");
+                move((newRail) -> newRail.Id < CurrentRail.Id, " Choo-Choo went back to ");
+
+                try
+                {
+                    // Choo-Choo wartet kurz, weil es Platz gemacht hat.
+                    Thread.sleep(5);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -47,11 +66,11 @@ public class ChooChoo
         CurrentRail.ChooChooLock.unlock();
     }
 
-    private boolean move(Function<Integer, Boolean> railCheck, String stringToPrint)
+    private boolean move(Predicate<Rail> railCheck, String stringToPrint)
     {
         for (Rail rail : CurrentRail.connectedRails)
         {
-            if (!railCheck.apply(rail.Id, CurrentRail.Id))
+            if (!railCheck.test(rail))
             {
                 continue;
             }
@@ -68,11 +87,5 @@ public class ChooChoo
         }
 
         return false;
-    }
-
-    @FunctionalInterface
-    private interface Function<A, R>
-    {
-        R apply(A one, A two);
     }
 }
