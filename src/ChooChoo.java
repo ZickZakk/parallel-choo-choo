@@ -1,3 +1,4 @@
+import java.time.ZonedDateTime;
 import java.util.function.Predicate;
 
 /**
@@ -30,14 +31,17 @@ public class ChooChoo
                 }
 
                 // Choo-Choo kann nicht abwärts, versucht aufwärts.
-                move((newRail) -> newRail.Id > CurrentRail.Id, " Choo-Choo went back to ");
-                try
+                if (move((newRail) -> newRail.Id > CurrentRail.Id, " Choo-Choo went back to "))
                 {
-                    // Choo-Choo wartet kurz, weil es Platz gemacht hat.
-                    Thread.sleep(5);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
+                    try
+                    {
+                        // Choo-Choo wartet kurz, weil es Platz gemacht hat.
+                        Thread.sleep(5);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
             else
@@ -49,20 +53,22 @@ public class ChooChoo
                 }
 
                 // Choo-Choo kann nicht aufwärts, versucht abwärts.
-                move((newRail) -> newRail.Id < CurrentRail.Id, " Choo-Choo went back to ");
-
-                try
+                if (move((newRail) -> newRail.Id < CurrentRail.Id, " Choo-Choo went back to "))
                 {
-                    // Choo-Choo wartet kurz, weil es Platz gemacht hat.
-                    Thread.sleep(5);
-                } catch (InterruptedException e)
-                {
-                    e.printStackTrace();
+                    try
+                    {
+                        // Choo-Choo wartet kurz, weil es Platz gemacht hat.
+                        Thread.sleep(10);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
 
-        System.out.println(this.toString() + " Choo-Choo arrived at target station. Choo-Choo stored in Choo-Choo-shed.");
+        System.out.println(ZonedDateTime.now().toLocalTime() + " " + this.toString() + " Choo-Choo arrived at target station. Choo-Choo stored in Choo-Choo-shed.");
         CurrentRail.ChooChooLock.unlock();
     }
 
@@ -80,7 +86,7 @@ public class ChooChoo
                 CurrentRail.ChooChooLock.unlock();
                 CurrentRail = rail;
 
-                System.out.println(this.toString() + stringToPrint + CurrentRail.Id);
+                System.out.println(ZonedDateTime.now().toLocalTime() + " " + this.toString() + stringToPrint + (CurrentRail.Id + 1));
 
                 return true;
             }
